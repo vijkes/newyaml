@@ -9,7 +9,7 @@ services:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=931728113463.dkr.ecr.us-east-2.amazonaws.com/newyaml
+      - REPOSITORY_URI=931728113463.dkr.ecr.us-east-2.amazonaws.com/samplepythonproject2.0
       - python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/www
