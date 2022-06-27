@@ -1,16 +1,17 @@
 version: "0.2"
 services:
   web:
-    build: .
-    restart: on-failure
-    env_file:
-      - ./.env
-    commands: 
+    pre-build:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - REPOSITORY_URI=931728113463.dkr.ecr.us-east-2.amazonaws.com/samplepythonproject2.0
-      - python manage.py runserver 0.0.0.0:8000
+      
+    build: .
+    restart: on-failure
+    env_file:
+      - ./.env
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/www
     ports:
@@ -26,3 +27,8 @@ services:
       - "5432:5432"
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
+     post_build:
+     commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest 
